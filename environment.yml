@@ -1,0 +1,22 @@
+name: junglecart
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - statsmodels
+  - jupyterlab
+  - ipywidgets
+  - matplotlib
+  - plotly
+  - tqdm
+  - faker
+  - pyarrow          # optional but recommended for Parquet support
+  - pip
+  - pip:
+      - prophet      # or "cmdstanpy" if Prophet install is heavy
+      - mlxtend      # for market-basket (apriori/association_rules)
