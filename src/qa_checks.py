@@ -1,30 +1,53 @@
 """
-Lightweight I/O helpers for saving and loading dataset CSVs.
+Quick QA checks to validate dataset integrity after generation.
 """
 
-from pathlib import Path
 import pandas as pd
-from .config import OUTPUT_DIR
+from .utils_io import load_csv
 
-def ensure_dir(path: Path | str) -> None:
-    """Create directory if it doesn't exist."""
-    Path(path).mkdir(parents=True, exist_ok=True)
+def fk_order_items() -> dict:
+    """
+    Validate that order_items foreign keys exist in orders and products.
+    Returns a dict with counts of missing keys (0 = all good).
+    """
+    oi     = load_csv("core/order_items.csv")
+    orders = load_csv("core/orders.csv", parse_dates=["order_date"])
+    prods  = load_csv("core/products.csv")
 
-def save_csv(df: pd.DataFrame, rel_path: str) -> None:
-    """
-    Save a DataFrame to CSV under data/output/.
-    Example: save_csv(df, "core/customers.csv")
-    """
-    full = Path(OUTPUT_DIR) / rel_path
-    ensure_dir(full.parent)
-    df.to_csv(full, index=False)
-    print(f"✅ wrote {rel_path} — {len(df):,} rows")
+    miss_orders = set(oi["order_id"].unique()) - set(orders["order_id"].unique())
+    miss_prods  = set(oi["product_id"].unique()) - set(prods["product_id"].unique())
 
-def load_csv(rel_path: str, parse_dates=None) -> pd.DataFrame:
+    return {
+        "order_items→orders_missing": len(miss_orders),
+        "order_items→products_missing": len(miss_prods),
+    }
+
+def basic_stats() -> dict:
     """
-    Load a CSV from data/output/ and optionally parse date columns.
+    Simple descriptive stats: orders per year and average items per order.
     """
-    full = Path(OUTPUT_DIR) / rel_path
-    if not full.exists():
-        raise FileNotFoundError(f"Expected file not found: {full}")
-    return pd.read_csv(full, parse_dates=parse_dates)
+    orders = load_csv("core/orders.csv", parse_dates=["order_date"])
+    oi     = load_csv("core/order_items.csv")
+
+    per_year = orders["order_date"].dt.year.value_counts().sort_index().to_dict()
+    avg_items_per_order = round(len(oi) / max(1, orders["order_id"].nunique()), 2)
+
+    return {
+        "orders_per_year": per_year,
+        "avg_items_per_order": avg_items_per_order
+    }
+
+def print_report():
+    """Pretty-print a minimal QA report at the end of your notebook."""
+    fk = fk_order_items()
+    stats = basic_stats()
+
+    print("==== JungleCart QA Report ====")
+    print("Foreign Keys:")
+    for k, v in fk.items():
+        print(f"  {k}: {'OK' if v==0 else v}")
+    print("\nStats:")
+    print("  Orders per year:")
+    for y, n in sorted(stats["orders_per_year"].items()):
+        print(f"    {y}: {n:,}")
+    print(f"  Avg items per order: {stats['avg_items_per_order']:.2f}")
