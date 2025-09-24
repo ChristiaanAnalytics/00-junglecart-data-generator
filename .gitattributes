@@ -1,2 +1,11 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normalize line endings across platforms
+* text=auto eol=lf
+
+# Treat CSVs as text for readable diffs
+*.csv text working-tree-encoding=UTF-8
+
+# Keep notebooks diffable (text) instead of binary
+*.ipynb text
+
+# Optional: mark data as linguist-generated so GitHub stats favor code
+output/** linguist-generated
