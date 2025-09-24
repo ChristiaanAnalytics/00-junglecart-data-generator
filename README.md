@@ -154,7 +154,4 @@ MIT License – feel free to use or adapt for your own projects.
 
 Built by [Your Name] to showcase advanced data-engineering and analytics skills.
 
-⸻
-
-💡 Tip: When publishing your analytics projects, you can symlink or download the generated dataset to each project repo, ensuring every analysis references the same realistic “single-company” data universe.
 
