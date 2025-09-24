@@ -26,25 +26,25 @@ junglecart-dataset/
 ├─ environment.yml
 ├─ Makefile
 ├─ notebooks/
-│   └─ 01_build_junglecart_dataset.ipynb
+│  └─ 01_build_junglecart_dataset.ipynb
 ├─ src/
-│   ├─ init.py
-│   ├─ config.py
-│   ├─ utils_io.py
-│   ├─ utils_dates.py
-│   └─ qa_checks.py
+│  ├─ __init__.py
+│  ├─ config.py
+│  ├─ utils_io.py
+│  ├─ utils_dates.py
+│  └─ qa_checks.py
 ├─ data/
-│   ├─ raw/
-│   └─ output/
-│       ├─ core/
-│       ├─ inventory/
-│       ├─ marketing/
-│       ├─ pricing_promos/
-│       ├─ social/
-│       └─ meta/
+│  ├─ raw/
+│  └─ output/
+│     ├─ core/
+│     ├─ inventory/
+│     ├─ marketing/
+│     ├─ pricing_promos/
+│     ├─ social/
+│     └─ meta/
 └─ docs/
-├─ dataset_overview.md
-└─ lineage.png
+   ├─ dataset_overview.md
+   └─ lineage.png
 
 ---
 
